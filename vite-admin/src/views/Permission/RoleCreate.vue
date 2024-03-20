@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed} from 'vue';
+import { ref, computed } from 'vue';
 import roleService from '@/services/role';
 import { useStore } from '@/stores/index.js';
 
@@ -33,22 +33,39 @@ async function addRole() {
     if (!name.value || !slug.value || !describe.value || !permissionsIdFilter.value) {
         alert('params empty!')
     }
-    console.log('name:', name.value, 'slug: ', slug.value, 'describe:', describe.value)
-    console.log('permissions：',permissions)
-    console.log('idArr：',idArr.value)
-    console.log('permissionsIdFilter.value:', permissionsIdFilter.value)
-    console.log('permissions:', JSON.stringify(permissionsIdFilter.value))
+    // console.log('name:', name.value, 'slug: ', slug.value, 'describe:', describe.value)
+    // console.log('permissions：',permissions)
+    // console.log('idArr：',idArr.value)
+    // console.log('permissionsIdFilter.value:', permissionsIdFilter.value)
+    // console.log('permissions:', JSON.stringify(permissionsIdFilter.value))
 
-    await roleService.addRole({ name: name.value, slug: slug.value, describe: describe.value, permissions: JSON.stringify(permissionsIdFilter.value) }).then(function (data) {
+    // await roleService.addRole({ name: name.value, slug: slug.value, describe: describe.value, permissions: JSON.stringify(permissionsIdFilter.value) }).then(function (data) {
+    //     if (data.code === 200) {
+    //         alert('添加成功！');
+    //         location.reload();
+    //     } else {
+    //         console.log(data);
+    //     }
+    // }).catch(function (error) {
+    //     console.log(error);
+    // });
+    try {
+        const data = await roleService.addRole({
+            name: name.value,
+            slug: slug.value,
+            describe: describe.value,
+            permissions: JSON.stringify(permissionsIdFilter.value)
+        });
+
         if (data.code === 200) {
             alert('添加成功！');
             location.reload();
         } else {
             console.log(data);
         }
-    }).catch(function (error) {
+    } catch (error) {
         console.log(error);
-    });
+    }
 }
 </script>
 <template>

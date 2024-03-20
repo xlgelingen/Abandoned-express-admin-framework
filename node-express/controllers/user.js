@@ -24,7 +24,7 @@ const user = {
         );
         return data;
       });
-      console.log("userContrl：", usersInfo);
+      // console.log("userContrl：", usersInfo);
       res.json({ code: 200, data: { usersInfo: usersInfo } });
     } catch (e) {
       res.locals.error = e;
@@ -37,7 +37,7 @@ const user = {
     let phone = req.body.phone;
     let password = req.body.password;
     let role = req.body.role;
-    console.log(name, phone, password, role);
+    // console.log(name, phone, password, role);
     if (!name || !phone || !password || !role) {
       res.json({ code: 0, data: "params empty!" });
       return;
@@ -61,15 +61,15 @@ const user = {
   renderEdit: async function (req, res, next) {
     try {
       var id = req.body.id;
-      console.log("用户控制/renderEdit/id：", id);
+      // console.log("用户控制/renderEdit/id：", id);
       const userArr = await User.select({ id });
       const user = userArr[0];
-      console.log("用户控制/renderEdit/user：", user);
+      // console.log("用户控制/renderEdit/user：", user);
       const role = await userRole.select({ user_id: id });
       var roleID = role[0].role_id;
-      console.log("用户控制/renderEdit/roleID：", roleID);
+      // console.log("用户控制/renderEdit/roleID：", roleID);
       const userInfo = { ...user, role: roleID };
-      console.log("用户控制/renderEdit/userInfo：", userInfo);
+      // console.log("用户控制/renderEdit/userInfo：", userInfo);
       res.json({ code: 200, data: { code: 200, userInfo: userInfo } });
     } catch (e) {
       res.json({ code: 0, data: { code: 0, e } });
@@ -88,23 +88,6 @@ const user = {
     try {
       await User.update(id, { name, phone, password });
       await userRole.where({ user_id: id }).update({ role_id: roleID });
-      //   if (res.locals.userInfo.id == id) {
-      //     var rpData = await urp.getRPData(id);
-      //     var permissionsID = rpData.permissions_id;
-      //     var token = jwt.sign(
-      //       {
-      //         user_id: id,
-      //         user_name: name,
-      //         user_phone: phone,
-      //         user_password: password,
-      //         user_role: roleID,
-      //         user_permissions: permissionsID,
-      //       },
-      //       JWT_SECRET,
-      //       { expiresIn: "30d" }
-      //     );
-      //     res.cookie("web_token", token, { maxAge: 60 * 24 * 60 * 60 });
-      //   }
       res.json({
         code: 200,
         data: { code: 200, message: "编辑成功"},

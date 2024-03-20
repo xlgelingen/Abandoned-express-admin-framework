@@ -19,8 +19,8 @@ const rolelController = {
         );
         return data;
       });
-      console.log('角色控制roles：',rolesInfo)
-      res.json({ code: 200, data: { code: 200,rolesInfo: rolesInfo } });
+      console.log("角色控制roles：", rolesInfo);
+      res.json({ code: 200, data: { code: 200, rolesInfo: rolesInfo } });
     } catch (e) {
       res.json({ code: 0, message: e.message });
     }
@@ -59,11 +59,13 @@ const rolelController = {
     const slug = req.body.slug;
     const describe = req.body.describe;
     const permissions = JSON.parse(req.body.permissions);
-    // console.log(name, slug, describe, permissions)
+    // console.log('1被调用了！')
     if (!name || !slug || !describe || !permissions) {
-      res.json({ code: 0, data: "params empty!" });
+      res.json({ code: 0, data: {code:0, msg:"params empty!"} });
+      // console.log('2被调用了！')
       return;
     }
+    // console.log('3被调用了！')
     try {
       const ids = await Role.insert({
         name: name,
@@ -79,7 +81,8 @@ const rolelController = {
           };
         })
       );
-      res.json({ code: 200, data: { code: 200,id: roleId }, message: "创建成功" });
+      // console.log('4被调用了！')
+      res.json({ code: 200, data: { code: 200, message: "创建成功" } });
     } catch (e) {
       res.json({ code: 0, message: e.message || e.errors });
     }
@@ -88,18 +91,18 @@ const rolelController = {
   renderEdit: async function (req, res, next) {
     try {
       var id = req.body.id;
-      console.log("角色控制/renderEdit/id：", id);
+      // console.log("角色控制/renderEdit/id：", id);
 
       const roleArr = await Role.select({ id });
       const role = roleArr[0];
-      console.log("角色控制/renderEdit/role：", role);
+      // console.log("角色控制/renderEdit/role：", role);
 
       var pData = await urp.getPData(id);
       var permissionsId = pData.permissions_id;
-      console.log("角色控制/renderEdit/permissionsId：", permissionsId);
+      // console.log("角色控制/renderEdit/permissionsId：", permissionsId);
 
       const roleInfo = { ...role, permissions: permissionsId };
-      console.log("角色控制/renderEdit/roleInfo：", roleInfo);
+      // console.log("角色控制/renderEdit/roleInfo：", roleInfo);
 
       res.json({ code: 200, data: { code: 200, roleInfo: roleInfo } });
     } catch (e) {
@@ -151,10 +154,10 @@ const rolelController = {
           })
         );
       }
-      res.json({ code: 200, data: { code: 200, message: "编辑成功"  }});
+      res.json({ code: 200, data: { code: 200, message: "编辑成功" } });
     } catch (e) {
       console.log(e.message);
-      res.json({ code: 0, data: { code: 0, message: e.message || e.errors} });
+      res.json({ code: 0, data: { code: 0, message: e.message || e.errors } });
     }
   },
 
