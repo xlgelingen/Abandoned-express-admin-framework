@@ -16,6 +16,7 @@ const urp = {
     var roleName = roleArr[0].slug;
     // console.log('roleid:',roleID)
     const permissions = await rolePermission.select({ role_id: roleID });
+    console.log('urp的选择permissions：',permissions)
     var permissionsID = permissions.map((data) => data.permission_id);
     var permissionsNamePromises = permissionsID.map(async function (data) {
       dataItem = await permission.select({ id: data });

@@ -19,7 +19,7 @@ router.get('/isbn', bookController.info);
 router.post('/token', tokenController.verify);
 
 router.post('/login', loginController.login);
-router.get('/logout', loginController.logout);
+// router.get('/logout', loginController.logout);
 
 router.get('/admin/users/user-info', userController.index);
 router.post('/admin/users/create', userController.insert);
@@ -28,6 +28,7 @@ router.put('/admin/users/edit', userController.update);
 router.delete('/admin/users/del', userController.delete);
 
 router.get('/admin/permissions/permission-info', permissionController.index);
+router.post('/admin/permissions/permission-info', permissionController.select);
 
 router.get('/admin/roles/role-info', roleController.index);
 router.post('/admin/roles/create', roleController.insert);

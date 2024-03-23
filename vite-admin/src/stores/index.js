@@ -6,8 +6,9 @@ export const useStore = defineStore('main', {
       users: null,
       user: null,
       roles: null,
-      permissions: ["role-index", "manager-index", "article-index", "article-category"],
-      allPermissions:[]
+      permissions: [],
+      allPermissions:[],
+      navRoutes:[]
     }
   },
   actions: {
@@ -25,6 +26,9 @@ export const useStore = defineStore('main', {
     },
     setAllPermissions(permissions) {
       this.allPermissions = permissions
+    },
+    setNavRoutes(navRoutes){
+      this.navRoutes = navRoutes
     }
   }
 })

@@ -3,19 +3,12 @@ const UserModel = require("../models/user");
 const User = new UserModel();
 const userRoleModel = require("../models/user_role.js");
 const userRole = new userRoleModel();
-const urp = require("../middlewares/user_role_permission");
-var jwt = require("jsonwebtoken");
-const JWT_SECRET = process.env.JWT_SECRET;
+// const urp = require("../middlewares/user_role_permission");
+// var jwt = require("jsonwebtoken");
+// const JWT_SECRET = process.env.JWT_SECRET;
 
 const user = {
   index: async function (req, res, next) {
-    // var index = req.query.page_index;
-    // var size = req.query.page_size;
-    // var drift = (index - 1) * size;
-
-    // var pageInfo = {};
-    // pageInfo.index = index;
-    // pageInfo.size = size;
     var users = await User.all();
     try {
       var usersInfo = users.map((data) => {
@@ -68,8 +61,8 @@ const user = {
       const role = await userRole.select({ user_id: id });
       var roleID = role[0].role_id;
       // console.log("用户控制/renderEdit/roleID：", roleID);
-      const userInfo = { ...user, role: roleID };
-      // console.log("用户控制/renderEdit/userInfo：", userInfo);
+      const userInfo = { ...user, role: `${roleID}`};
+      console.log("用户控制/renderEdit/userInfo：", userInfo);
       res.json({ code: 200, data: { code: 200, userInfo: userInfo } });
     } catch (e) {
       res.json({ code: 0, data: { code: 0, e } });
@@ -99,17 +92,6 @@ const user = {
   },
 
   delete: async function (req, res, next) {
-    // let id = req.body.id;
-    // if (!id) {
-    //   res.json({ code: 0, data: "params empty!" });
-    //   return;
-    // }
-    // try {
-    //   const user = await User.delete(id);
-    //   res.json({ code: 200, data: user });
-    // } catch (e) {
-    //   res.json({ code: 0, data: e });
-    // }
   },
 };
 

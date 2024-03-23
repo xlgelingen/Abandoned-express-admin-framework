@@ -67,6 +67,7 @@ axiosInstance.interceptors.response.use(
         ElMessage.error(res.data.msg);
         return Promise.reject(res.data);
       default:
+        //只接收响应的数据部分的data属性的内容
         return res.data.data;
     }
   },

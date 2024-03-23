@@ -9,7 +9,7 @@ const tokenController = {
   verify: async function (req,res,next) {
     try {
       var token = req.body.token;
-      console.log('调用token',token)
+      console.log('token控制/token解码/传过来的token：',token)
       var decode = await jwt.verify(token, JWT_SECRET);
       var userInfo = {
           id: decode.user_id,

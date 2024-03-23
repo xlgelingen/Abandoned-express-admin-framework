@@ -14,6 +14,6 @@ export default {
   editRole:`${ADMIN_PREFIX}/roles/edit`,
   permissions: `${ADMIN_PREFIX}/permissions/permission-info`,
   login: `${PREFIX}/api/login`,
-  logout: `${PREFIX}/api/logout`,
+  // logout: `${PREFIX}/api/logout`,
   varifyToken: `${PREFIX}/api/token`,
 }

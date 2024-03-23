@@ -1,21 +1,30 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import loginService from '@/services/login'
 import Cookies from 'js-cookie';
-// import { useStore } from '@/stores/index.js';
-import { useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 
-// const store = useStore();
 const router = useRouter();
+
+
+onMounted(() => {
+  const TOKEN_KEY = 'web_token';
+  const token = Cookies.get(TOKEN_KEY);
+  // console.log('有cookie，要跳转，token：', token)
+  if (token) {
+    router.push({ name: 'Root' })
+  }
+})
+
 //smsRules用于验证手机号和验证码的规则
 const smsRules = {
   //定义了验证手机号的规则
   phone: [
     //第一个规则对象指定了是必填项，并指定当输入框失去焦点时触发验证（trigger: 'blur'）。当手机号为空时，显示的错误提示信息:'请输入手机号'
     { required: true, message: '请输入手机号', trigger: 'blur' },
-    //第二个规则对象指定手机号的正则表达式模式（pattern），限制只能输入中国大陆的手机号码，同样在输入框失去焦点时触发验证。
+    //指定手机号的正则表达式模式（pattern），同样在输入框失去焦点时触发验证。
     {
-      pattern: /^1[3456789]\d{9}$/, //正则表达式，1开头，后跟3,4,5,6,7,8,9中的任意一个数字，再接着任意的9个数字，共计11位
+      pattern: /^1[3456789]\d{9}$/, //正则表达式
       message: '目前只支持中国大陆的手机号码',//当手机号格式不符合要求时，显示的错误提示信息。
       trigger: 'blur'
     }
@@ -27,7 +36,7 @@ const smsRules = {
   ]
 }
 
-const formData = ref({
+const formData = reactive({
   code: null,
   phone: null,
   checked: false
@@ -36,35 +45,23 @@ const formData = ref({
 const smsText = ref('发送验证码')
 const smsDisabled = ref(false)
 
-filter();
-
-function filter() {
-  const TOKEN_KEY = 'web_token';
-  const token = Cookies.get(TOKEN_KEY);
-  if(token){
-    router.push({ name: 'Root'})
-  }
-}
-
 function handleSmsCode() {
   // 创建一个长度为 5 的 Uint32Array 数组
   var randomValues = Math.floor(Math.random() * 100000);
   // 打印生成的随机数
   alert(randomValues);
 }
-
 function handleSubmit() {
-  var phone = formData.value.phone;
-  var code = formData.value.code;
+  var phone = formData.phone;
+  var code = formData.code;
   if (!phone || !code) {
     alert('params empty!')
     return
   }
-  // console.log(phone, code)
   loginService.login({ phone }).then(function (data) {
     if (data.code === 200) {
-      // store.setUser(data.user);
-      console.log('data.token', data.token)
+      // console.log('登录响应data：', data)
+      // console.log('登录data.token：', data.token)
       Cookies.set('web_token', data.token, { expires: 60 })
       alert('登录成功！')
       location.reload()
@@ -72,6 +69,7 @@ function handleSubmit() {
       alert('登录失败，没有此用户！');
       console.log(data)
     }
+    // console.log('接收到的响应：', msg)
   }).catch(function (error) {
     console.log(error);
   })
@@ -119,7 +117,6 @@ function handleSubmit() {
 
 <style lang="less" scoped>
 .login-page {
-  display: flex;
   height: 100vh;
   display: flex;
   flex-direction: column;

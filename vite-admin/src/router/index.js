@@ -6,8 +6,10 @@ import userService from '@/services/user';
 import roleService from '@/services/role';
 import permissionService from '@/services/permission';
 import tokenService from '@/services/token';
-// import permissionService from '@/services/permission'
 import { useStore } from '@/stores/index.js';
+// import { useRoute } from 'vue-router';
+
+// const route = useRoute();
 
 const TOKEN_KEY = 'web_token';
 const appRouter = createRouter({
@@ -72,10 +74,10 @@ appRouter.beforeEach(async (to, from, next) => {
         });
       console.log('路由导航/roles：', roles);
       store.setRoles(roles);
-      console.log('路由导航/store.roles：', store.roles, new Date());
+      // console.log('路由导航/store.roles：', store.roles, new Date());
 
       const allPermissions = await permissionService
-        .getPermissions()
+        .getAllPermissions()
         .then(function (data) {
           return data.permissions;
         })
@@ -85,7 +87,7 @@ appRouter.beforeEach(async (to, from, next) => {
         });
       console.log('路由导航/allPermissions：', allPermissions);
       store.setAllPermissions(allPermissions);
-      console.log('路由导航/store.allPermissions：', store.allPermissions, new Date());
+      // console.log('路由导航/store.allPermissions：', store.allPermissions, new Date());
 
       const user = await tokenService
         .varifyToken({ token })
@@ -95,16 +97,27 @@ appRouter.beforeEach(async (to, from, next) => {
         .catch(function (error) {
           console.log(error);
         });
-      // console.log('登录用户：', user);
-
+      console.log('路由导航/登录用户：', user);
       store.setUser(user);
-      const permissions = user.permissions;
-      // console.log('登录用户权限：', permissions);
 
+      const userId = user.id;
+      console.log('路由导航/登录用户ID：', userId);
+
+      const permissions = await permissionService
+        .getPermissions({ userId: userId })
+        .then(function (data) {
+          return data.permissions;
+        })
+        .catch(function (error) {
+          console.log(error);
+          return;
+        });
+      console.log('路由导航/登录用户权限：', permissions);
       store.setPermissions(permissions);
+      // console.log('路由导航/store.permissions：', store.permissions, new Date());
 
-      // 没有任何权限要么跳走，要么去提示页面
-      if (!permissions?.length) {
+      // 没有要去的页面的权限，就跳去Forbidden页面
+      if (to.meta.permission && !permissions.includes(to.meta.permission) && !['Forbidden'].includes(to.name)) {
         next({ name: 'Forbidden' });
         return;
       }

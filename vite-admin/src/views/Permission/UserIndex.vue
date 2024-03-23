@@ -4,14 +4,13 @@ import { reactive, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const store = useStore();
+const usersAll = store.users;
 
 const pageInfo = reactive({
     index: parseInt(route.query.page_index) || 1,
     size: parseInt(route.query.page_size) || 20
 });
-
-const store = useStore();
-const usersAll = store.users;
 
 // 计算分页起始索引
 const startIndex = computed(() => (pageInfo.index - 1) * pageInfo.size);

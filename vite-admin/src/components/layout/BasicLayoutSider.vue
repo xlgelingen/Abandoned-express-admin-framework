@@ -4,23 +4,28 @@ import { useRoute } from 'vue-router'
 import { useStore } from '@/stores/index'
 import { RotateLeftOutlined } from '@ant-design/icons-vue'
 import routesAll from '@/router/routes'
-// import { formatRoutes,filterPermissionRoutes,filterNavRoutes } from '@/utils/permission'
 import { formatRoutes} from '@/utils/permission'
 const route = useRoute()
 //获取用户拥有的权限列表
-const { permissions } = useStore()
+const store = useStore()
 
 const isCollapse = ref(false)
 
 //获取有权限的具有导航信息的路由
+const permissions = store.permissions
+// console.log('permissions:',permissions)
+
 // const filterRoute = filterPermissionRoutes(routesAll, permissions)
 // const navFilter = filterNavRoutes(filterRoute)
 // console.log('filterRoute：',filterRoute)
 // console.log('navFilter：',navFilter)
+
 const navRoutes = ref(formatRoutes(routesAll, permissions))
+// console.log('navRoutes:',navRoutes)
 
 //激活的路由name
 const activeIndex = ref(route.name)
+// eslint-disable-next-line no-unused-vars
 watch(route, (to, from) => {
     activeIndex.value = to.name
 })
@@ -30,7 +35,8 @@ watch(route, (to, from) => {
     <div class="sider-section" :style="[{ width: isCollapse ? '80px' : '243px' }]">
         <div class="logo-section">
             <div class="header-logo-container">
-                <svg-icon v-show="!isCollapse" class="header-logo-element" name="ii-logo" width="64px" height="64px"></svg-icon>
+                <svg-icon v-show="!isCollapse" class="header-logo-element" name="ii-logo" width="64px"
+                    height="64px"></svg-icon>
 
                 <div class="header-logo-collapse-btn" @click="isCollapse = !isCollapse">
                     <RotateLeftOutlined />

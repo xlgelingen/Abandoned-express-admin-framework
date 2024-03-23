@@ -1,60 +1,49 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { reactive } from 'vue';
 import roleService from '@/services/role';
 import { useStore } from '@/stores/index.js';
 
 const store = useStore();
 
-var name = ref('');
-var slug = ref('');
-var describe = ref('');
+var allPermissions = store.allPermissions;
 
-var permissions = store.allPermissions;
+const smsRules = {
+    name: [
+        { required: true, message: '请输入用户名', trigger: 'blur' }
+    ],
 
-var idArr = computed(() => {
-    const result = [false];
-    for (var key of permissions) {
-        result[key.id] = false;
-    }
-    return result;
-})
+    slug: [
+        { required: true, message: '请输入展示名称', trigger: 'blur' },
+    ],
 
-var permissionsIdFilter = computed(() => {
-    var result = [];
-    for (var index in idArr.value) {
-        if (idArr.value[index]) {
-            result.push(index)
-        }
-    }
-    return result;
+    desc: [
+        { required: true, message: '请输入描述', trigger: 'blur' },
+    ],
+
+    permissions: [
+        { required: true, message: '请选择权限', trigger: 'change' }
+    ],
+}
+
+const formData = reactive({
+    name: null,
+    slug: null,
+    desc: null,
+    permissions: []
 })
 
 async function addRole() {
-    if (!name.value || !slug.value || !describe.value || !permissionsIdFilter.value) {
+    if (!formData.name || !formData.slug || !formData.desc || !formData.permissions) {
         alert('params empty!')
     }
-    // console.log('name:', name.value, 'slug: ', slug.value, 'describe:', describe.value)
-    // console.log('permissions：',permissions)
-    // console.log('idArr：',idArr.value)
-    // console.log('permissionsIdFilter.value:', permissionsIdFilter.value)
-    // console.log('permissions:', JSON.stringify(permissionsIdFilter.value))
-
-    // await roleService.addRole({ name: name.value, slug: slug.value, describe: describe.value, permissions: JSON.stringify(permissionsIdFilter.value) }).then(function (data) {
-    //     if (data.code === 200) {
-    //         alert('添加成功！');
-    //         location.reload();
-    //     } else {
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
+    console.log('allPermissions:',allPermissions)
+    console.log("name: ", formData.name, "slug: ", formData.slug, "desc:", formData.desc, "permissions:", formData.permissions)
     try {
         const data = await roleService.addRole({
-            name: name.value,
-            slug: slug.value,
-            describe: describe.value,
-            permissions: JSON.stringify(permissionsIdFilter.value)
+            name: formData.name,
+            slug: formData.slug,
+            describe: formData.desc,
+            permissions: JSON.stringify(formData.permissions)
         });
 
         if (data.code === 200) {
@@ -69,96 +58,52 @@ async function addRole() {
 }
 </script>
 <template>
-    <div>
+    <div class="content-form-wrapper">
         <div class="content-form">
-            <div class="form-item">
-                <input type="text" class="form-input" id="input-name" v-model="name" placeholder="名称" />
-            </div>
-            <div class="form-item">
-                <input type="text" class="form-input" id="input-slug" v-model="slug" placeholder="展示名称" />
-            </div>
-            <div class="form-item">
-                <textarea class="form-textarea role-describe" id="input-describe" v-model="describe"
-                    placeholder="请输入描述～"></textarea>
-            </div>
-            <div v-for="permission in permissions" :key="permission.id" class="form-item  permission-box">
-                <input type="checkbox" class='permission-item' :id="permission.id" name="checkbox"
-                    v-model="idArr[permission.id]">
-                <label for="`${permission.id}`">{{ permission.name }}</label>
-            </div>
-            <div class="form-item">
-                <button class="form-button" id="form-button" @click="addRole">新增</button>
-            </div>
+            <el-form :model="formData" :rules="smsRules" status-icon>
+                <el-form-item prop="name">
+                    <el-input v-model="formData.name" type="text" placeholder="请输入用户名" autocomplete="on"></el-input>
+                </el-form-item>
+                <el-form-item prop="slug">
+                    <el-input v-model="formData.slug" type="text" placeholder="请输入展示名称" autocomplete="on"></el-input>
+                </el-form-item>
+                <el-form-item prop="desc">
+                    <el-input v-model="formData.desc" type="textarea" placeholder="请输入描述" autocomplete="on" />
+                </el-form-item>
+                <el-form-item prop="permissions">
+                    <el-checkbox-group v-model="formData.permissions" class="checkbox-grid">
+                        <el-checkbox v-for="permission in allPermissions" :value="permission.id" name="type"
+                            :key="permission.id">
+                            {{ permission.name }}
+                        </el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+                <el-form-item>
+                    <el-button style="width: 100%" type="primary" @click="addRole">新增</el-button>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 </template>
 <style type="text/css" lang="less" scoped>
-.form-item {
-    margin: 20px 0;
+.content-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.form-input {
-    display: block;
-    height: 40px;
-    width: 400px;
-    margin-bottom: 30px;
-    padding-left: 0;
-    border: none;
-    border-radius: 0px;
-    border-bottom: 1px solid #000;
-    background: transparent;
-    color: #000;
-    font-size: 14px;
-    line-height: 1em;
-    font-weight: normal;
-}
-
-.form-textarea {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-    line-height: 20px;
-    height: 80px;
-    padding: 10px;
-    border: 1px solid #e4e4e4;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.form-textarea.role-describe {
-    width: 400px;
-}
-
-.form-textarea:focus {
-    border: 1px solid #000;
-}
-
-.form-button {
-    display: block;
-    width: 400px;
-    height: 40px;
+.content-form {
     text-align: center;
-    font-size: 16px;
-    border-radius: 20px;
-    background-color: #000;
-    color: #fff;
-    font-size: 14px;
-    border: none;
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    cursor: pointer;
+    width: 400px;
+    margin: 40px auto;
 }
 
-.form-input:focus {
-    border-bottom: 2px solid #000;
-}
-
-.form-button:hover {
-    font-weight: 600;
-    background-color: #409eff;
-}
-
-.form-item.permission-box {
-    padding: 0 10px;
-    display: inline-block;
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 10px;
 }
 </style>

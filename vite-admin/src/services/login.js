@@ -5,9 +5,9 @@ const loginService = {
   login: (data,config) => {
     return request.post(API.login,data,config)
   },
-  logout: () => {
-    return request.post(API.logout)
-  }
+  // logout: () => {
+  //   return request.get(API.logout)
+  // }
 }
 
 export default loginService
