@@ -56,7 +56,8 @@ function logout() {
   height: 54px;
   display: flex;
   z-index: 10;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
 
   .header-bd {
     flex: 1;

@@ -1,5 +1,6 @@
 <script setup>
-import { reactive } from 'vue';
+import { ref, reactive } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus'
 import roleService from '@/services/role';
 import { useStore } from '@/stores/index.js';
 
@@ -25,6 +26,7 @@ const smsRules = {
     ],
 }
 
+const formRef = ref();
 const formData = reactive({
     name: null,
     slug: null,
@@ -34,9 +36,12 @@ const formData = reactive({
 
 async function addRole() {
     if (!formData.name || !formData.slug || !formData.desc || !formData.permissions) {
-        alert('params empty!')
+        ElMessage({
+            message: "params empty!",
+            type: 'error',
+        })
     }
-    console.log('allPermissions:',allPermissions)
+    console.log('allPermissions:', allPermissions)
     console.log("name: ", formData.name, "slug: ", formData.slug, "desc:", formData.desc, "permissions:", formData.permissions)
     try {
         const data = await roleService.addRole({
@@ -47,8 +52,12 @@ async function addRole() {
         });
 
         if (data.code === 200) {
-            alert('添加成功！');
-            location.reload();
+            ElMessageBox.alert('新建角色成功！', '提示', {
+                confirmButtonText: 'OK',
+                callback: () => {
+                    location.reload()
+                },
+            })
         } else {
             console.log(data);
         }
@@ -56,21 +65,25 @@ async function addRole() {
         console.log(error);
     }
 }
+
+function resetForm() {
+  formRef.value.resetFields();
+};
 </script>
 <template>
     <div class="content-form-wrapper">
         <div class="content-form">
-            <el-form :model="formData" :rules="smsRules" status-icon>
-                <el-form-item prop="name">
+            <el-form ref="formRef" :model="formData" :rules="smsRules" status-icon label-position="top">
+                <el-form-item prop="name" label="用户名">
                     <el-input v-model="formData.name" type="text" placeholder="请输入用户名" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="slug">
+                <el-form-item prop="slug" label="展示名称">
                     <el-input v-model="formData.slug" type="text" placeholder="请输入展示名称" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="desc">
+                <el-form-item prop="desc" label="描述">
                     <el-input v-model="formData.desc" type="textarea" placeholder="请输入描述" autocomplete="on" />
                 </el-form-item>
-                <el-form-item prop="permissions">
+                <el-form-item prop="permissions" label="权限">
                     <el-checkbox-group v-model="formData.permissions" class="checkbox-grid">
                         <el-checkbox v-for="permission in allPermissions" :value="permission.id" name="type"
                             :key="permission.id">
@@ -79,7 +92,8 @@ async function addRole() {
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item>
-                    <el-button style="width: 100%" type="primary" @click="addRole">新增</el-button>
+                    <el-button class="form-btn" style="margin-right: 8px;" type="primary" @click="addRole">提 交</el-button>
+                    <el-button class="form-btn" type="button" @click="resetForm">重 置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -105,5 +119,9 @@ async function addRole() {
     display: grid;
     grid-template-columns: repeat(3, auto);
     gap: 10px;
+}
+
+.form-btn{
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 </style>

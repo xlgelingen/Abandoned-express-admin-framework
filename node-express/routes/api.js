@@ -18,7 +18,8 @@ router.get('/', function(req, res, next) {
 router.get('/isbn', bookController.info);
 router.post('/token', tokenController.verify);
 
-router.post('/login', loginController.login);
+router.post('/login/phone', loginController.phoneLogin);
+router.post('/login/account', loginController.accountLogin);
 // router.get('/logout', loginController.logout);
 
 router.get('/admin/users/user-info', userController.index);

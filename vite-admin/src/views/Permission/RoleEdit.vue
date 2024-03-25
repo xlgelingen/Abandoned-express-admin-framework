@@ -14,10 +14,12 @@ const roleId = ref(route.params.id);
 var allPermissions = store.allPermissions;
 
 var editRole = reactive({});
+const originRole = reactive({});
 
 onMounted(async () => {
     try {
         var roleInfo = await getEditRole({ id: roleId.value });
+        Object.assign(originRole, roleInfo);
         Object.assign(editRole, roleInfo)
         console.log('角色编辑/ editRole', editRole);
     } catch (error) {
@@ -60,21 +62,25 @@ async function saveRole() {
         console.log(error);
     });
 }
+
+function resetForm() {
+    Object.assign(editRole, originRole);
+};
 </script>
 <template>
     <div class="content-form-wrapper">
         <div class="content-form">
-            <el-form :model="editRole" :rules="smsRules" status-icon>
-                <el-form-item prop="name">
+            <el-form :model="editRole" :rules="smsRules" status-icon label-position="top">
+                <el-form-item prop="name" label="用户名">
                     <el-input v-model="editRole.name" type="text" placeholder="请输入用户名" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="slug">
+                <el-form-item prop="slug" label="展示名称">
                     <el-input v-model="editRole.slug" type="text" placeholder="请输入展示名称" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="describe">
+                <el-form-item prop="describe" label="描述">
                     <el-input v-model="editRole.describe" type="textarea" placeholder="请输入描述" autocomplete="on" />
                 </el-form-item>
-                <el-form-item prop="permissions">
+                <el-form-item prop="permissions" label="权限">
                     <el-checkbox-group v-model="editRole.permissions" class="checkbox-grid">
                         <el-checkbox v-for="permission in allPermissions" :value="permission.id" name="type"
                             :key="permission.id">
@@ -83,7 +89,8 @@ async function saveRole() {
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item>
-                    <el-button style="width: 100%" type="primary" @click="saveRole">保存</el-button>
+                    <el-button class="form-btn" style="margin-right: 8px;" type="primary" @click="saveRole">提 交</el-button>
+                    <el-button class="form-btn" type="button" @click="resetForm">重 置</el-button>
                 </el-form-item>
             </el-form>
         </div>

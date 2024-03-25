@@ -9,7 +9,10 @@
       
 <style type="text/css" lang="less" scoped>
 .page-footer {
+  // position: absolute;
+  // bottom: 0;
   height: 40px;
+  width: 100%;
   line-height: 40px;
   font-size: 12px;
   color: #999;

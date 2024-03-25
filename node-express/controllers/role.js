@@ -61,7 +61,7 @@ const rolelController = {
     const permissions = JSON.parse(req.body.permissions);
     // console.log('1被调用了！')
     if (!name || !slug || !describe || !permissions) {
-      res.json({ code: 0, data: {code:0, msg:"params empty!"} });
+      res.json({data: {code:0, msg:"params empty!"} });
       // console.log('2被调用了！')
       return;
     }
@@ -82,9 +82,9 @@ const rolelController = {
         })
       );
       // console.log('4被调用了！')
-      res.json({ code: 200, data: { code: 200, message: "创建成功" } });
+      res.json({data: { code: 200, message: "创建成功" } });
     } catch (e) {
-      res.json({ code: 0, message: e.message || e.errors });
+      res.json({ data:{code: 0, message: e.message || e.errors }});
     }
   },
 

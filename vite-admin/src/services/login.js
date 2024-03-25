@@ -2,12 +2,12 @@ import request from '@/utils/request.js'
 import API from '@/consts/api.js'
 
 const loginService = {
-  login: (data,config) => {
-    return request.post(API.login,data,config)
+  phoneLogin: (data,config) => {
+    return request.post(API.phoneLogin,data,config)
   },
-  // logout: () => {
-  //   return request.get(API.logout)
-  // }
+  accountLogin: (data,config) => {
+    return request.post(API.accountLogin,data,config)
+  },
 }
 
 export default loginService

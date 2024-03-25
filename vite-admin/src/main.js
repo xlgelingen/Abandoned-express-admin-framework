@@ -9,6 +9,9 @@ import ElementPlus from 'element-plus';
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 import 'element-plus/dist/index.css';
 
+import Antd from "ant-design-vue";
+import 'ant-design-vue/dist/reset.css';
+
 import 'virtual:svg-icons-register';
 import SvgIcon from '@/components/common/iconSvg.vue';
 
@@ -21,6 +24,8 @@ app.use(router);
 app.use(ElementPlus, {
   locale: zhCn
 });
+
+app.use(Antd)
 
 //全局注册组件，<svg-icon></svg-icon>
 app.component('SvgIcon', SvgIcon);

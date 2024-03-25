@@ -6,22 +6,32 @@ const rolesAll = store.roles;
 
 </script>
 <template>
-    <div class="content-addRole">
-        <router-link :to="{ name: 'RoleCreate' }">新增角色 >></router-link>
-    </div>
     <div class="content-table">
+        <div class="content-addRole">
+            <router-link  class="addRole-btn" :to="{ name: 'RoleCreate' }">新增角色</router-link>
+        </div>
         <table class="table-container">
             <tr>
-                <th>名称</th>
-                <th>展示名称</th>
-                <th>描述</th>
-                <th>创建时间</th>
-                <th>操作</th>
+                <th>
+                    <div class="table-th">名称</div>
+                </th>
+                <th>
+                    <div class="table-th">展示名称</div>
+                </th>
+                <th>
+                    <div class="table-th">描述</div>
+                </th>
+                <th>
+                    <div class="table-th">创建时间</div>
+                </th>
+                <th>
+                    <div class="table-th">操作</div>
+                </th>
             </tr>
             <template v-for="role in rolesAll" :key="role.id">
                 <tr class="table-role">
-                    <td>{{ role.name }}</td>
                     <td>{{ role.slug }}</td>
+                    <td>{{ role.name }}</td>
                     <td>{{ role.describe }}</td>
                     <td>{{ role.create_time }}</td>
                     <td><a class="role-edit" :data-id="role.id" :href="`/permission/role/${role.id}/edit`">编辑</a>
@@ -33,22 +43,33 @@ const rolesAll = store.roles;
 </template>
 <style type="text/css" lang="less" scoped>
 .content-addRole {
-    width: fit-content;
-    margin: 10px 0;
-    color: #000;
+    display: flex;
+    justify-content: flex-end;
     font-size: 14px;
-    font-weight: 600;
     cursor: pointer;
 
-    &:hover {
-        color: #409eff;
+    .addRole-btn {
+        color: #fff;
+        background: #1890ff;
+        box-shadow: 0 2px 0 rgba(5, 175, 255, 0.1);
+        padding: 10px 15px;
+        border-radius: 6px;
+        width: fit-content;
+        transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+        &:hover {
+            color: #fff;
+            background: #40a9ff;
+        }
     }
 }
 
 .role-edit {
-    color: #000;
+    color: #1890ff;
     font-size: 14px;
     cursor: pointer;
+    // transition: all 0.3s ease-in;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 
     &:hover {
         color: #409eff;
@@ -56,33 +77,46 @@ const rolesAll = store.roles;
     }
 }
 
+.content-table {
+    padding: 16px 24px;
+    border-radius: 10px;
+}
+
 .table-container {
-    border-collapse: collapse;
-    margin: 1rem 0;
     width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    border-radius: 15px 15px 0 0;
 }
 
-.table-container tr {
-    border-top: 1px solid #dfe2e5;
-}
 
-.table-container tr:nth-child(2n) {
-    background-color: #f6f8fa;
+
+.table-container tr:first-child {
+    background-color: #fafafa;
 }
 
 .table-container th {
-    font-style: 16px;
     font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid #0000000F;
+    padding: 12px 0;
+
+    .table-th {
+        border-right: 1px solid #0000000F;
+        padding: 0 8px;
+    }
 }
 
-.table-container td,
-.table-container th {
-    border: 1px solid #dfe2e5;
-    padding: .6em 1em;
+.table-container th:last-child .table-th {
+    border: none;
+}
+
+.table-container td {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 8px;
 }
 
 .table-container tr td {
-    color: #00000081;
-    text-align: center;
+    text-align: left;
 }
 </style>

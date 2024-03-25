@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import { useStore } from '@/stores/index'
 import { RotateLeftOutlined } from '@ant-design/icons-vue'
 import routesAll from '@/router/routes'
-import { formatRoutes} from '@/utils/permission'
+import { formatRoutes } from '@/utils/permission'
 const route = useRoute()
 //获取用户拥有的权限列表
 const store = useStore()
@@ -35,9 +35,10 @@ watch(route, (to, from) => {
     <div class="sider-section" :style="[{ width: isCollapse ? '80px' : '243px' }]">
         <div class="logo-section">
             <div class="header-logo-container">
-                <svg-icon v-show="!isCollapse" class="header-logo-element" name="ii-logo" width="64px"
-                    height="64px"></svg-icon>
-
+                <div class="header-logo-content" v-show="!isCollapse">
+                    <svg-icon class="header-logo-element" name="ii-logo"></svg-icon>
+                    <h1 >Admin</h1>
+                </div>
                 <div class="header-logo-collapse-btn" @click="isCollapse = !isCollapse">
                     <RotateLeftOutlined />
                 </div>
@@ -85,29 +86,67 @@ watch(route, (to, from) => {
 .sider-section {
     position: relative;
     width: 243px;
-    background-color: #fff;
     transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
+    border-right: 1px solid rgba(5, 5, 5, 0.06);
+
 
     .menu-section {
         max-height: calc(100vh - 56px);
     }
+}
 
-    :deep(.el-menu) {
+.menu-section {
+    .el-menu {
         border-right: none;
+        background: linear-gradient(#ffffff, #f5f5f5 28%);
     }
+
+    .el-menu-item-group {
+        background: #f5f5f5
+    }
+
+    .el-menu-item.is-active {
+        background-color: #ecf5ff;
+        border-right: 2px solid;
+    }
+
+    .el-menu-item:not(.is-active):hover,
+    :deep(.el-sub-menu__title:hover) {
+        color: #409eff;
+        background-color: inherit;
+    }
+
 }
 
 .header-logo-container {
     display: flex;
     height: 54px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding: 0 20px;
+    background-color: rgba(255, 255, 255, 0.6);
+
+    .header-logo-content {
+        display: flex;
+        align-items: center;
+
+        h1 {
+            position: relative;
+            // bottom: -12px;
+            // height: 32px;
+            margin-bottom: 0;
+            margin-inline-start: 8px;
+            font-weight: 600;
+        }
+    }
 
     .header-logo-element {
-        margin: 10px 20px;
-        height: 80%;
+        // flex: 1;
+        margin: 10px 0px;
+        height: 28px;
+        width: 33px;
     }
 
     .header-logo-collapse-btn {
@@ -118,7 +157,7 @@ watch(route, (to, from) => {
         text-align: center;
         top: 4px;
         transition: all 0.2s ease;
-        width: 80px;
+        // width: 80px;
     }
 }
 </style>

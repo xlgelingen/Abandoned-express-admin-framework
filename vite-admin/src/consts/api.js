@@ -13,7 +13,8 @@ export default {
   addRole: `${ADMIN_PREFIX}/roles/create`,
   editRole:`${ADMIN_PREFIX}/roles/edit`,
   permissions: `${ADMIN_PREFIX}/permissions/permission-info`,
-  login: `${PREFIX}/api/login`,
+  phoneLogin: `${PREFIX}/api/login/phone`,
+  accountLogin: `${PREFIX}/api/login/account`,
   // logout: `${PREFIX}/api/logout`,
   varifyToken: `${PREFIX}/api/token`,
 }

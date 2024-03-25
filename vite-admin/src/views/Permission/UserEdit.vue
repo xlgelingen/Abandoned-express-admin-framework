@@ -114,6 +114,9 @@ async function saveUser() {
     await editUserReq();
 }
 
+function resetForm() {
+    Object.assign(editUser, originUser);
+};
 </script>
 <template>
     <div class="content-form-wrapper">
@@ -129,24 +132,25 @@ async function saveUser() {
             </template>
         </el-dialog>
         <div class="content-form">
-            <el-form :model="editUser" :rules="smsRules" status-icon>
-                <el-form-item prop="name">
+            <el-form :model="editUser" :rules="smsRules" status-icon label-position="top">
+                <el-form-item prop="name" label="用户名">
                     <el-input type="text" placeholder="请输入用户名" v-model="editUser.name" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="phone">
+                <el-form-item prop="phone" label="手机号">
                     <el-input type="number" placeholder="请输入手机号" v-model="editUser.phone" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="password">
+                <el-form-item prop="password" label="密码">
                     <el-input type="text" placeholder="请输入密码" v-model="editUser.password" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="role">
+                <el-form-item prop="role" label="角色">
                     <el-select v-model="editUser.role" placeholder="请选择角色" autocomplete="on">
                         <el-option label="管理员" value="1" />
                         <el-option label="图书员" value="2" />
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button style="width: 100%" type="primary" @click="saveUser">保存</el-button>
+                    <el-button class="form-btn" style="margin-right: 8px;" type="primary" @click="saveUser">提 交</el-button>
+                    <el-button class="form-btn" type="button" @click="resetForm">重 置</el-button>
                 </el-form-item>
             </el-form>
         </div>

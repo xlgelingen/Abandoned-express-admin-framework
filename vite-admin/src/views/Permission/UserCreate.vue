@@ -1,5 +1,6 @@
 <script setup>
-import { reactive } from 'vue';
+import { ref, reactive } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus'
 import userService from '@/services/user';
 
 const smsRules = {
@@ -31,6 +32,7 @@ const smsRules = {
     ],
 }
 
+const formRef = ref();
 const formData = reactive({
     name: null,
     phone: null,
@@ -40,13 +42,20 @@ const formData = reactive({
 
 async function addUser() {
     if (!formData.name || !formData.phone || !formData.password || !formData.role) {
-        alert('params empty!')
+        ElMessage({
+            message: "params empty!",
+            type: 'error',
+        })
     }
-    console.log("name: ",formData.name, "phone: ",formData.phone, "password:", formData.password, "role:", formData.role )
+    console.log("name: ", formData.name, "phone: ", formData.phone, "password:", formData.password, "role:", formData.role)
     await userService.addUser({ name: formData.name, phone: formData.phone, password: formData.password, role: formData.role }).then(function (data) {
         if (data.code === 200) {
-            alert('添加成功！');
-            location.reload();
+            ElMessageBox.alert('新建用户成功！', '提示', {
+                confirmButtonText: 'OK',
+                callback: () => {
+                    location.reload()
+                },
+            })
         } else {
             console.log(data);
         }
@@ -54,28 +63,33 @@ async function addUser() {
         console.log(error);
     });
 }
+
+function resetForm() {
+  formRef.value.resetFields();
+};
 </script>
 <template>
     <div class="content-form-wrapper">
         <div class="content-form">
-            <el-form :model="formData" :rules="smsRules" status-icon>
-                <el-form-item prop="name">
+            <el-form  ref="formRef" :model="formData" :rules="smsRules" status-icon label-position="top">
+                <el-form-item label="用户名" prop="name">
                     <el-input type="text" placeholder="请输入用户名" v-model="formData.name" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="phone">
+                <el-form-item label="手机号" prop="phone">
                     <el-input type="number" placeholder="请输入手机号" v-model="formData.phone" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="password">
+                <el-form-item label="密码" prop="password">
                     <el-input type="text" placeholder="请输入密码" v-model="formData.password" autocomplete="on"></el-input>
                 </el-form-item>
-                <el-form-item prop="role">
+                <el-form-item label="角色" prop="role">
                     <el-select v-model="formData.role" placeholder="请选择角色" autocomplete="on">
                         <el-option label="管理员" value="1" />
                         <el-option label="图书员" value="2" />
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button style="width: 100%" type="primary" @click="addUser">新增</el-button>
+                    <el-button class="form-btn" style="margin-right: 8px;" type="primary" @click="addUser">提 交</el-button>
+                    <el-button class="form-btn" type="button" @click="resetForm">重 置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -95,5 +109,9 @@ async function addUser() {
     text-align: center;
     width: 400px;
     margin: 40px auto;
+}
+
+.form-btn{
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 </style>

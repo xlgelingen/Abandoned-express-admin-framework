@@ -1,6 +1,6 @@
 <template>
-  <div class="home-page">
-    <div class="home-content">
+  <div class="page-body-content">
+    <div class="role-list">
       <!-- <svg-icon name="ii-logo" width="64px" height="64px"></svg-icon> -->
       <div class="role-item">
         <h3>角色1：图书员</h3>
@@ -14,10 +14,17 @@
   </div>
 </template>
 <style type="text/css" lang="less" scoped>
-.home-content {
-  margin: 20px;
+.page-body-content {
+  margin: 30px 40px 0 40px;
+  min-width: 900px;
+  background-color: #fff;
+  flex: 1;
 }
-.role-item{
+
+.role-list{
+  padding: 24px;
+}
+.role-item {
   margin-bottom: 20px;
 }
 </style>
